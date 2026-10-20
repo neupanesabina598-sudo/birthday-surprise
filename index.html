@@ -101,7 +101,7 @@
 
   <div id="phase1" class="phase active">
     <div class="phase1-container">
-      <h1 class="handwritten">Happy Birthday,<br>My Secret Bestie ❤️</h1>
+      <h1 class="handwritten">Happy Birthday,<br>Secret ❤️</h1>
       <p class="mono" style="font-size:0.95rem; margin:1rem auto; max-width:500px;">
         Some friendships never end. They simply stay in a special corner of our hearts, no matter how far life takes us.
       </p>
@@ -301,7 +301,7 @@ Happy Birthday to my forever secret 🎂💕`;
       bigHeartTap.style.transform = 'scale(0.9)';
       setTimeout(() => bigHeartTap.style.transform = '', 300);
       
-      typeWriter(phase1Letter, phase1Text, 30, () => {
+      typeWriter(phase1Letter, phase1Text, 0, () => {
         phase1Sig.classList.add('show');
       });
     });
@@ -411,7 +411,7 @@ With lots of love, memories, and a little bit of emotional drama 😂❤️,`;
       finalLetterContainer.classList.add('show');
       
       if(!finalLetterTyped) {
-        typeWriter(finalLetterText, finalLetterContent, 25, () => {
+        typeWriter(finalLetterText, finalLetterContent, 0, () => {
           finalSig.style.display = 'block';
           finalEnd.style.display = 'block';
           finalButtons.style.display = 'block';
@@ -424,7 +424,7 @@ With lots of love, memories, and a little bit of emotional drama 😂❤️,`;
       finalSig.style.display = 'none';
       finalEnd.style.display = 'none';
       finalButtons.style.display = 'none';
-      typeWriter(finalLetterText, finalLetterContent, 25, () => {
+      typeWriter(finalLetterText, finalLetterContent, 0, () => {
         finalSig.style.display = 'block';
         finalEnd.style.display = 'block';
         finalButtons.style.display = 'block';
