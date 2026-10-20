@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>❤️ Happy Birthday, My Secret Bestie</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Space+Mono&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: radial-gradient(circle at 20% 20%, #ffe4ec, #fff0f3 80%);
+      font-family: 'Quicksand', sans-serif; color: #4a1e2b; overflow-x: hidden; min-height: 100vh;
+    }
+    .handwritten { font-family: 'Caveat', cursive; font-weight: 600; }
+    .mono { font-family: 'Space Mono', monospace; }
+    
+    .floating-hearts-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: hidden; }
+    .floating-hearts-bg span { position: absolute; display: block; font-size: 1.2rem; color: #ffb6c9; opacity: 0.35; animation: floatUp 12s infinite linear; bottom: -10%; }
+    @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); opacity: 0.35; } 100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; } }
+
+    .progress-bar { display: flex; justify-content: center; gap: 0.5rem; margin: 1rem 0; position: relative; z-index: 10; }
+    .progress-step { padding: 0.4rem 0.8rem; border-radius: 30px; background: #ffe0e8; color: #b31b4b; font-size: 0.8rem; font-weight: 600; transition: 0.3s; border: 1px solid #ffb6c9; }
+    .progress-step.active-step { background: #ff4d6d; color: white; box-shadow: 0 0 15px #ff4d6d; border-color: #ff4d6d; }
+
+    .phase { display: none; width: 100%; max-width: 900px; margin: 0 auto; padding: 1rem 1rem 5rem; position: relative; z-index: 2; animation: fadeSlide 0.6s ease forwards; }
+    .phase.active { display: block; }
+    @keyframes fadeSlide { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
+
+    .btn { display: inline-block; background: #ff4d6d; color: #fff; border: none; border-radius: 50px; padding: 0.85rem 1.8rem; font-size: 1.1rem; font-weight: 600; font-family: 'Quicksand', sans-serif; cursor: pointer; transition: 0.3s; box-shadow: 0 6px 16px rgba(255, 77, 109, 0.35); margin: 0.5rem; text-align: center; border: 1px solid #ff809b; }
+    .btn:hover { background: #e6395a; transform: scale(1.03); }
+    .btn-secondary { background: #fff0f3; color: #b31b4b; border: 2px solid #ffb6c9; box-shadow: 0 4px 12px rgba(255, 180, 200, 0.3); }
+    .btn-secondary:hover { background: #ffe0e8; }
+    .back-btn { background: #ffe0e8; color: #b31b4b; border: none; border-radius: 30px; padding: 0.5rem 1rem; font-weight: 600; cursor: pointer; margin-bottom: 1rem; }
+
+    .phase1-container { display: flex; flex-direction: column; align-items: center; text-align: center; }
+    h1 { font-size: clamp(1.8rem, 6vw, 3.2rem); color: #b31b4b; text-shadow: 0 0 10px rgba(255,180,200,0.6); }
+    .big-heart-wrapper { position: relative; width: min(70vw, 300px); height: min(70vw, 300px); margin: 1rem auto; cursor: pointer; transition: transform 0.3s; }
+    .big-heart-wrapper:hover { transform: scale(1.03); }
+    .heart-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle, rgba(255,100,150,0.5) 0%, rgba(255,200,220,0) 70%); animation: pulseGlow 2s infinite alternate; pointer-events: none; }
+    @keyframes pulseGlow { 0% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.95); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); } }
+    .heart-canvas { position: relative; width: 100%; height: 100%; }
+
+    .envelope-card { background: #fffafc; border-radius: 24px; padding: 1.5rem; box-shadow: 0 20px 40px rgba(255, 100, 150, 0.25); border: 2px solid #ffccd8; display: none; flex-direction: column; max-width: 600px; margin: 1rem auto; text-align: left; }
+    .envelope-card.show { display: flex; animation: fadeSlide 0.5s; }
+    .letter-text { font-family: 'Caveat', cursive; font-size: 1.3rem; line-height: 1.5; white-space: pre-wrap; min-height: 120px; }
+    .signature { font-family: 'Caveat', cursive; font-size: 1.5rem; color: #b31b4b; text-align: right; margin-top: 1rem; opacity: 0; transition: 1s; }
+    .signature.show { opacity: 1; }
+
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .photo-card { position: relative; border-radius: 20px; overflow: hidden; aspect-ratio: 1/1; box-shadow: 0 8px 16px rgba(180, 50, 80, 0.15); cursor: pointer; transition: 0.3s; background: #ffe0e8; }
+    .photo-card:hover { transform: scale(1.03); }
+    .photo-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-caption { position: absolute; bottom: 0; width: 100%; background: rgba(255, 240, 245, 0.9); padding: 0.3rem; font-size: 0.75rem; text-align: center; font-weight: 600; }
+
+    .flip-card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .flip-card { perspective: 1000px; cursor: pointer; height: 180px; }
+    .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; border-radius: 20px; box-shadow: 0 6px 16px rgba(200, 50, 80, 0.15); }
+    .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+    .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; padding: 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-weight: 600; font-size: 0.9rem; }
+    .flip-card-front { background: #ffe0e8; color: #b31b4b; border: 2px solid #ffb6c9; }
+    .flip-card-back { background: #ff4d6d; color: white; transform: rotateY(180deg); font-family: 'Caveat', cursive; font-size: 1.2rem; line-height: 1.2; }
+
+    .special-photo-frame { position: relative; width: min(90vw, 350px); margin: 1.5rem auto; aspect-ratio: 1/1; border-radius: 30px; overflow: hidden; box-shadow: 0 20px 40px rgba(200, 50, 80, 0.3); cursor: pointer; border: 4px solid #fff; }
+    .special-photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+    .curtain-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #ffb6c9 0%, #ff4d6d 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 3rem; transition: 0.8s; transform-origin: top; }
+    .curtain-overlay.open { transform: scaleY(0); opacity: 0; }
+
+    .final-letter-container { background: #fffafc; border-radius: 24px; padding: 1.5rem; box-shadow: 0 12px 30px rgba(200, 50, 80, 0.15); border: 2px solid #ffccd8; display: none; text-align: left; max-width: 700px; margin: 1rem auto; }
+    .final-letter-container.show { display: block; }
+    .final-letter-text { font-family: 'Caveat', cursive; font-size: 1.35rem; line-height: 1.5; white-space: pre-wrap; }
+
+    .music-control { position: fixed; bottom: 16px; right: 16px; z-index: 100; display: flex; gap: 6px; background: #fff0f3; padding: 6px 10px; border-radius: 40px; box-shadow: 0 4px 16px rgba(200, 50, 80, 0.25); border: 1px solid #ffb6c9; }
+    .music-control button { background: #ff4d6d; border: none; color: #fff; font-size: 1.2rem; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .music-control button.muted { background: #ccc; color: #666; }
+    
+    .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(40, 10, 20, 0.85); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1rem; backdrop-filter: blur(6px); }
+    .lightbox.show { display: flex; }
+    .lightbox img { max-width: 95%; max-height: 90vh; border-radius: 20px; }
+    .lightbox-close { position: absolute; top: 10px; right: 20px; font-size: 3rem; color: white; cursor: pointer; background: none; border: none; }
+
+    @media (max-width: 480px) {
+      .btn { width: 100%; margin: 0.5rem 0; padding: 0.9rem; }
+      .letter-text { font-size: 1.15rem; }
+      .final-letter-text { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="floating-hearts-bg" id="floatingHeartsBg"></div>
+
+  <div class="progress-bar" id="progressBar">
+    <span class="progress-step active-step" data-phase="1">Phase 1</span>
+    <span class="progress-step" data-phase="2">Phase 2</span>
+    <span class="progress-step" data-phase="3">Phase 3</span>
+  </div>
+
+  <div id="phase1" class="phase active">
+    <div class="phase1-container">
+      <h1 class="handwritten">Happy Birthday,<br>My Secret Bestie ❤️</h1>
+      <p class="mono" style="font-size:0.95rem; margin:1rem auto; max-width:500px;">
+        Some friendships never end. They simply stay in a special corner of our hearts, no matter how far life takes us.
+      </p>
+
+      <div class="big-heart-wrapper" id="bigHeartTap">
+        <div class="heart-glow"></div>
+        <canvas id="heartCanvas" class="heart-canvas" width="400" height="400"></canvas>
+      </div>
+      <p class="mono" style="font-size:0.9rem;">✨ Tap the Heart to Unlock a Memory 💌 ✨</p>
+
+      <div class="envelope-card" id="envelopeCard">
+        <div class="letter-text" id="phase1Letter"></div>
+        <div class="signature" id="phase1Signature">Forever your friend,<br>Your partner in crime ❤️</div>
+        <button class="btn" id="toPhase2Btn" style="margin-top:1.5rem;">Unlock Our Memories →</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="phase2" class="phase">
+    <button class="back-btn" id="backToPhase1">← Back to Heart</button>
+    <h2 class="handwritten" style="text-align:center; margin-bottom:0.5rem;">Our Memories & Funny Moments 🎬💗</h2>
+    <p class="mono" style="text-align:center; font-size:0.85rem;">A little scrapbook of us.</p>
+
+    <h3 class="handwritten" style="margin:1.5rem 0 0.5rem;">📸 Our Photo Collage</h3>
+    <div class="gallery-grid" id="photoGallery"></div>
+
+    <h3 class="handwritten" style="margin:1.5rem 0 0.5rem;">💬 Funny & Sweet Notes</h3>
+    <div class="flip-card-grid" id="flipCardGrid"></div>
+
+    <div style="text-align:center; margin-top:2rem;">
+      <p class="handwritten" style="font-size:1.5rem;">Okay, Secret Bestie… 🥹❤️</p>
+      <p class="mono" style="font-size:0.95rem; margin:0.5rem 0 1rem;">I have one last thing to tell you. This one comes straight from my heart.</p>
+      <button class="btn" id="toPhase3Btn">One Last Surprise 💖</button>
+    </div>
+  </div>
+
+  <div id="phase3" class="phase">
+    <button class="back-btn" id="backToPhase2">← Back to Memories</button>
+    <h2 class="handwritten" style="text-align:center; margin-bottom:0.5rem;">One Special Photo & Final Letter 💌</h2>
+
+    <div class="special-photo-frame" id="specialPhotoFrame">
+      <!-- Your exact filename -->
+      <img src="assets/special/special.jpg" alt="Our special memory">
+      <div class="curtain-overlay" id="curtainOverlay">❤️</div>
+    </div>
+    
+    <p class="mono" style="text-align:center; font-size:0.9rem; margin:0.5rem 0 1rem;" id="photoInstruction">
+      Some photos hold a thousand memories. Tap this one to hear what my heart wants to tell you. ❤️
+    </p>
+
+    <div class="final-letter-container" id="finalLetterContainer">
+      <div class="final-letter-text" id="finalLetterText"></div>
+      
+      <div id="finalSignature" class="handwritten" style="font-size:1.5rem; margin-top:1rem; text-align:right; display:none;">
+        Your forever friend,<br>Your secret-keeping partner,<br>Your old-time bestie. 💗
+      </div>
+      <div id="finalMessageEnd" class="handwritten" style="text-align:center; font-size:1.4rem; margin-top:1.5rem; display:none;">
+        Some friendships are too special to be forgotten. Ours is one of them. ❤️
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:1rem; display:none;" id="finalButtons">
+      <button class="btn btn-secondary" id="replayLetterBtn">Read My Letter Again 💌</button>
+      <button class="btn" id="resetToPhase1Btn">Our Memories Never End ♾️</button>
+    </div>
+  </div>
+
+  <div class="music-control" id="musicControl">
+    <button id="musicToggle" title="Play/Pause">🎵</button>
+    <button id="muteToggle" title="Mute/Unmute">🔊</button>
+  </div>
+
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <img id="lightboxImg" src="" alt="Expanded memory">
+  </div>
+
+  <!-- Your exact filename -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="assets/music/our-song.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    let currentPhase = 1;
+    let musicStarted = false;
+    let isMuted = false;
+    let typingTimeout = null;
+    const bgMusic = document.getElementById('bgMusic');
+
+    const fhBg = document.getElementById('floatingHeartsBg');
+    for (let i = 0; i < 15; i++) {
+      let span = document.createElement('span');
+      span.textContent = ['❤️','💖','🌸','✨'][Math.floor(Math.random()*4)];
+      span.style.left = Math.random() * 100 + '%';
+      span.style.animationDelay = Math.random() * 10 + 's';
+      span.style.animationDuration = (8 + Math.random() * 5) + 's';
+      fhBg.appendChild(span);
+    }
+
+    const canvas = document.getElementById('heartCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    
+    function resizeCanvas() {
+      let size = canvas.parentElement.clientWidth;
+      canvas.width = size;
+      canvas.height = size;
+      initParticles();
+    }
+    
+    function initParticles() {
+      particles = [];
+      const colors = ['#ff4d6d', '#ff809b', '#ffb6c9', '#e6395a'];
+      for (let i = 0; i < 150; i++) {
+        let t = Math.random() * Math.PI * 2;
+        let x = 16 * Math.pow(Math.sin(t), 3);
+        let y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
+        let scale = (canvas.width / 40) * 0.6;
+        
+        particles.push({
+          bx: canvas.width/2 + x * scale * (0.8 + Math.random()*0.4),
+          by: canvas.height/2 - y * scale * (0.8 + Math.random()*0.4),
+          x: 0, y: 0, size: 2 + Math.random() * 3,
+          color: colors[Math.floor(Math.random()*colors.length)], off: Math.random() * 100
+        });
+      }
+    }
+
+    function animateHeart(time) {
+      if(!ctx) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x = p.bx + Math.sin(time * 0.002 + p.off) * 3;
+        p.y = p.by + Math.cos(time * 0.0015 + p.off) * 3;
+        ctx.beginPath();
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = '#ff4d6d';
+        ctx.shadowBlur = 5;
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      });
+      requestAnimationFrame(animateHeart);
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    setTimeout(() => { resizeCanvas(); requestAnimationFrame(animateHeart); }, 100);
+
+    function typeWriter(element, text, speed, callback) {
+      if(typingTimeout) clearTimeout(typingTimeout);
+      element.textContent = '';
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          typingTimeout = setTimeout(type, speed);
+        } else if (callback) { callback(); }
+      }
+      type();
+    }
+
+    const bigHeartTap = document.getElementById('bigHeartTap');
+    const envelopeCard = document.getElementById('envelopeCard');
+    const phase1Letter = document.getElementById('phase1Letter');
+    const phase1Sig = document.getElementById('phase1Signature');
+
+    const phase1Text = `Hey, my secret bestie! ❤️
+
+Do you remember the first day we chose different paths? That day still feels so emotional to me because the time we spent together was one of the most beautiful times of my life.
+
+Life changed, our paths became different, and we may not talk or meet as often as before. But that doesn't mean I forgot about you.
+
+Every time I talk about my memories, you are always part of my stories. No matter how many new friends I make, you will always have your own special place in my heart.
+
+You were my first friend, and I will never forget the moments we shared, the silly things we laughed about, the secrets we exchanged, and the memories that only we can understand.
+
+And you know what? You will always be my secret bestie, the person with whom I could share almost everything without pretending to be someone else.
+
+Distance may change our daily conversations, but it can never erase what you mean to me.
+
+Some people become memories, but some people remain a part of us forever. You are one of those people. ❤️
+
+Happy Birthday to my forever secret bestie! 🎂💕`;
+
+    bigHeartTap.addEventListener('click', function() {
+      // START MUSIC AND SET TO 1:30 (90 SECONDS)
+      if(!musicStarted) {
+        bgMusic.currentTime = 90; // Jumps to 1:30
+        bgMusic.play().then(() => {
+          musicStarted = true;
+          document.getElementById('musicToggle').innerText = '⏸️';
+        }).catch(err => console.log("Autoplay blocked"));
+      }
+      
+      envelopeCard.classList.add('show');
+      bigHeartTap.style.transform = 'scale(0.9)';
+      setTimeout(() => bigHeartTap.style.transform = '', 300);
+      
+      typeWriter(phase1Letter, phase1Text, 30, () => {
+        phase1Sig.classList.add('show');
+      });
+    });
+
+    const photoGallery = document.getElementById('photoGallery');
+    // EXACT FILENAMES FROM YOUR SCREENSHOT
+    const photoData = [
+      { src: 'assets/photos/1.jpg', cap: 'That one time! 😂' },
+      { src: 'assets/photos/2.jpg', cap: 'Always in my heart ❤️' },
+      { src: 'assets/photos/3.jpg', cap: 'Besties forever' },
+      { src: 'assets/photos/4.jpg', cap: 'Unforgettable ❤️' },
+      { src: 'assets/photos/5.jpg', cap: 'Our little world' }
+    ];
+    
+    photoData.forEach(data => {
+      let div = document.createElement('div');
+      div.className = 'photo-card';
+      div.innerHTML = `<img src="${data.src}" alt="Memory"><div class="photo-caption">${data.cap}</div>`;
+      div.onclick = () => openLightbox(data.src);
+      photoGallery.appendChild(div);
+    });
+
+    const flipCardGrid = document.getElementById('flipCardGrid');
+    const cardsData = [
+      { front: '😂<br>Distance Award', back: 'You won the award for being my favourite person who lives far away and still occupies so much space in my brain. ❤️' },
+      { front: '⚠️<br>Warning', back: 'You are permanently registered as my secret bestie. No cancellation, no replacement, no refund! 💕' },
+      { front: '🥹<br>A Reminder', back: 'Becoming busy, successful, or an engineer does not mean you are allowed to forget your old bestie. I will still disturb you! 😂' },
+      { front: '💌<br>Emotional Damage', back: 'Sometimes I miss our old days so much that I wish I could travel back in time, just for one more ordinary day with you.' },
+      { front: '🎂<br>Birthday Rule', back: "Today's rules: Smile more, eat your favourite food, take lots of pictures, and remember someone is wishing you happiness from far away. ❤️" }
+    ];
+
+    cardsData.forEach(data => {
+      let div = document.createElement('div');
+      div.className = 'flip-card';
+      div.innerHTML = `
+        <div class="flip-card-inner">
+          <div class="flip-card-front handwritten" style="font-size:1.2rem;">${data.front}</div>
+          <div class="flip-card-back">${data.back}</div>
+        </div>
+      `;
+      div.onclick = () => { div.classList.toggle('flipped'); };
+      flipCardGrid.appendChild(div);
+    });
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    
+    function openLightbox(src) {
+      lightboxImg.src = src;
+      lightbox.classList.add('show');
+    }
+    document.getElementById('lightboxClose').onclick = () => lightbox.classList.remove('show');
+    lightbox.onclick = (e) => { if(e.target === lightbox) lightbox.classList.remove('show'); };
+
+    const specialPhotoFrame = document.getElementById('specialPhotoFrame');
+    const curtainOverlay = document.getElementById('curtainOverlay');
+    const photoInstruction = document.getElementById('photoInstruction');
+    const finalLetterContainer = document.getElementById('finalLetterContainer');
+    const finalLetterText = document.getElementById('finalLetterText');
+    const finalSig = document.getElementById('finalSignature');
+    const finalEnd = document.getElementById('finalMessageEnd');
+    const finalButtons = document.getElementById('finalButtons');
+    
+    const finalLetterContent = `Hello, my Secret Bestie! ❤️🥹
+
+Maybe you thought I had forgotten about you, but trust me, that could never happen. I remember you every day, even though things are not the same as they used to be.
+
+I know life has taken us down different paths, and we cannot spend time together like we did before. But the memories we made will always remain special to me.
+
+Happy Birthday, my dear bestie! 🎂💗
+
+I hope we can meet again soon, spend time together, laugh about our old memories, and create many more beautiful moments just like before.
+
+And one day, I genuinely hope to see your name written as Er. Smritee Timilsina. I hope you achieve everything you dream of and become the person you have always wanted to be. I will always be cheering for you.
+
+But hey, one little request from your bestie! 😂❤️
+
+Please do not spend your entire life working. I want you to work hard for your dreams, but I also want you to enjoy the life you are working so hard to build.
+
+Travel as much as you can. Visit new places, explore beautiful mountains, meet different people, try new things, take countless pictures, laugh until your stomach hurts, and collect stories that you will tell me someday.
+
+Because life is unpredictable. We never really know what the next step will bring, so do not forget to enjoy the journey while chasing your dreams.
+
+I hope your life is filled with endless joy, good health, love, peace, success, and countless reasons to smile. May you always find the courage to follow your dreams and the time to enjoy every beautiful moment along the way.
+
+And since Dashain is also around the corner, Happy Dashain in advance! ❤️🌺
+
+May this Dashain bring you new energy, happiness, prosperity, and countless blessings. May Navadurga Bhawani always protect you, guide you toward the right path, and help fulfil all your heartfelt wishes.
+
+No matter where life takes us, please remember that you will always be my special secret bestie. The distance may grow, our schedules may change, and life may become busy, but you will never lose your place in my heart.
+
+Thank you for being a beautiful part of my life. Thank you for the memories, the laughter, the secrets, and all the little moments that became unforgettable.
+
+I miss you, I believe in you, and I will always wish the best for you.
+
+Happy Birthday once again, my Secret Bestie! 🎂❤️
+
+Until we meet again, take care of yourself, keep smiling, chase your dreams, and promise me that you will enjoy this beautiful life.
+
+With lots of love, memories, and a little bit of emotional drama 😂❤️,`;
+
+    let finalLetterTyped = false;
+
+    specialPhotoFrame.addEventListener('click', function() {
+      curtainOverlay.classList.add('open');
+      photoInstruction.style.display = 'none';
+      finalLetterContainer.classList.add('show');
+      
+      if(!finalLetterTyped) {
+        typeWriter(finalLetterText, finalLetterContent, 25, () => {
+          finalSig.style.display = 'block';
+          finalEnd.style.display = 'block';
+          finalButtons.style.display = 'block';
+          finalLetterTyped = true;
+        });
+      }
+    });
+
+    document.getElementById('replayLetterBtn').onclick = () => {
+      finalSig.style.display = 'none';
+      finalEnd.style.display = 'none';
+      finalButtons.style.display = 'none';
+      typeWriter(finalLetterText, finalLetterContent, 25, () => {
+        finalSig.style.display = 'block';
+        finalEnd.style.display = 'block';
+        finalButtons.style.display = 'block';
+      });
+    };
+
+    function goToPhase(num) {
+      document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+      document.getElementById('phase' + num).classList.add('active');
+      document.querySelectorAll('.progress-step').forEach((s, i) => {
+        if(i < num) s.classList.add('active-step');
+        else s.classList.remove('active-step');
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.getElementById('toPhase2Btn').onclick = () => goToPhase(2);
+    document.getElementById('backToPhase1').onclick = () => goToPhase(1);
+    document.getElementById('toPhase3Btn').onclick = () => goToPhase(3);
+    document.getElementById('backToPhase2').onclick = () => goToPhase(2);
+    document.getElementById('resetToPhase1Btn').onclick = () => {
+      goToPhase(1);
+      curtainOverlay.classList.remove('open');
+      photoInstruction.style.display = 'block';
+      finalLetterContainer.classList.remove('show');
+      finalLetterTyped = false;
+      finalSig.style.display = 'none';
+      finalEnd.style.display = 'none';
+      finalButtons.style.display = 'none';
+    };
+
+    document.getElementById('musicToggle').onclick = function() {
+      if(bgMusic.paused) {
+        bgMusic.play();
+        this.innerText = '⏸️';
+      } else {
+        bgMusic.pause();
+        this.innerText = '🎵';
+      }
+    };
+
+    document.getElementById('muteToggle').onclick = function() {
+      if(bgMusic.muted) {
+        bgMusic.muted = false;
+        this.innerText = '🔊';
+        this.classList.remove('muted');
+      } else {
+        bgMusic.muted = true;
+        this.innerText = '🔇';
+        this.classList.add('muted');
+      }
+    };
+  </script>
+</body>
+</html>
